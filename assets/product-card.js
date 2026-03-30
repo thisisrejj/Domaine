@@ -13,12 +13,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const newSecondary = swatch.dataset.secondary;
         const newPrice = swatch.dataset.price;
 
-        // 🔵 ACTIVE STATE
+        // ACTIVE STATE
         swatches.forEach(s => s.classList.remove("ring-2", "ring-black"));
         swatch.classList.add("ring-2", "ring-black");
 
-        // 🖼️ IMAGE TRANSITION (fade out → change → fade in)
-        if (newPrimary && primaryImage) {
+        // PRIMARY IMAGE
+        if (newPrimary) {
           primaryImage.classList.add("opacity-0");
 
           setTimeout(() => {
@@ -27,18 +27,22 @@ document.addEventListener("DOMContentLoaded", () => {
           }, 200);
         }
 
-        // 🖼️ SECONDARY IMAGE UPDATE (for hover)
-        if (secondaryImage && newSecondary) {
+        // SECONDARY IMAGE (key fix)
+        if (secondaryImage) {
           secondaryImage.classList.add("opacity-0");
 
           setTimeout(() => {
-            secondaryImage.src = newSecondary;
+            if (newSecondary) {
+              secondaryImage.src = newSecondary;
+            } else {
+              secondaryImage.src = newPrimary; // fallback
+            }
             secondaryImage.classList.remove("opacity-0");
           }, 200);
         }
 
-        // 💲 PRICE UPDATE
-        if (newPrice && price) {
+        // PRICE
+        if (newPrice) {
           price.classList.add("opacity-0");
 
           setTimeout(() => {
@@ -48,22 +52,5 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     });
-
-    // ✨ OPTIONAL: smoother hover animation using JS (enhances Tailwind)
-    if (primaryImage && secondaryImage) {
-      card.addEventListener("mouseenter", () => {
-        secondaryImage.classList.add("opacity-100");
-        secondaryImage.classList.remove("opacity-0");
-
-        primaryImage.classList.add("opacity-0");
-      });
-
-      card.addEventListener("mouseleave", () => {
-        secondaryImage.classList.remove("opacity-100");
-        secondaryImage.classList.add("opacity-0");
-
-        primaryImage.classList.remove("opacity-0");
-      });
-    }
   });
 });
