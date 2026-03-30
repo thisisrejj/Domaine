@@ -11,7 +11,7 @@
 
   <!-- IMAGE WRAPPER: hover applies only here -->
   <div class="relative w-full aspect-[4/5] overflow-hidden group">
-    
+
     <!-- PRIMARY IMAGE -->
     <img 
       src="{{ product.featured_image | image_url: width: 800 }}"
@@ -55,31 +55,28 @@
         <div class="flex gap-2 mt-3">
           {% for variant in product.variants %}
             {% if variant.option1 %}
+              
               {% comment %}
-                Determine secondary image:
-                1. Use metafield if exists (best practice)
-                2. Otherwise, use next image in product.images
+                Secondary image: next image in product.images based on variant order
               {% endcomment %}
-              {% assign secondary_image = '' %}
-              {% if variant.metafields.custom.secondary_image != blank %}
-                {% assign secondary_image = variant.metafields.custom.secondary_image | img_url: '800x' %}
+              {% assign primary_image = variant.featured_image | image_url: width: 800 %}
+              {% assign variant_index = forloop.index0 %}
+              {% assign next_index = variant_index | plus: 1 %}
+              {% if product.images[next_index] %}
+                {% assign secondary_image = product.images[next_index] | image_url: width: 800 %}
               {% else %}
-                {% assign idx = forloop.index0 | plus: 1 %}
-                {% if product.images[idx] %}
-                  {% assign secondary_image = product.images[idx] | image_url: width: 800 %}
-                {% else %}
-                  {% assign secondary_image = variant.featured_image | image_url: width: 800 %}
-                {% endif %}
+                {% assign secondary_image = primary_image %}
               {% endif %}
 
               <button
                 class="swatch w-5 h-5 rounded-full border transition-all duration-200 hover:scale-110 focus:outline-none"
                 style="background-color: {{ variant.option1 | downcase }}"
-                data-image="{{ variant.featured_image | image_url: width: 800 }}"
+                data-image="{{ primary_image }}"
                 data-secondary="{{ secondary_image }}"
                 data-price="{{ variant.price | money }}"
                 aria-label="{{ variant.option1 }}"
               ></button>
+
             {% endif %}
           {% endfor %}
         </div>

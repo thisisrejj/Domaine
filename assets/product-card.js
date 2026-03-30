@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const cards = document.querySelectorAll(".relative.w-full.bg-white"); // product cards
+  const cards = document.querySelectorAll(".relative.w-full.bg-white"); // select all product cards
 
   cards.forEach(card => {
     const swatches = card.querySelectorAll(".swatch");
@@ -13,15 +13,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const newSecondary = swatch.dataset.secondary;
         const newPrice = swatch.dataset.price;
 
-        // ACTIVE STATE
+        // Active ring for selected swatch
         swatches.forEach(s => s.classList.remove("ring-2", "ring-black"));
         swatch.classList.add("ring-2", "ring-black");
 
-        // UPDATE IMAGES
+        // Update images
         if (primaryImage) primaryImage.src = newPrimary;
         if (secondaryImage) secondaryImage.src = newSecondary || newPrimary;
 
-        // UPDATE PRICE
+        // Update price
         if (price) price.textContent = newPrice;
       });
     });
