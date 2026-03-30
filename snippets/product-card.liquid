@@ -60,8 +60,16 @@
                 Secondary image: next image in product.images based on variant order
               {% endcomment %}
               {% assign primary_image = variant.featured_image | image_url: width: 800 %}
-              {% assign variant_index = forloop.index0 %}
-              {% assign next_index = variant_index | plus: 1 %}
+
+              {% assign featured_index = 0 %}
+              {% for img in product.images %}
+                {% if img == variant.featured_image %}
+                  {% assign featured_index = forloop.index0 %}
+                {% endif %}
+              {% endfor %}
+
+              {% assign next_index = featured_index | plus: 1 %}
+
               {% if product.images[next_index] %}
                 {% assign secondary_image = product.images[next_index] | image_url: width: 800 %}
               {% else %}
