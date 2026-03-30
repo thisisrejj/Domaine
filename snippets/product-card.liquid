@@ -1,10 +1,11 @@
 <div class="relative w-full bg-white rounded-2xl overflow-hidden shadow-sm">
 
+  <div class="image-wrapper border border-gray-200 rounded-[10px]">
   <!-- SALE BADGE -->
   {% if product.compare_at_price_max > product.price %}
     <div class="absolute top-3 left-3 z-10">
-      <span class="bg-black text-white text-[11px] px-2 py-1 rounded-full">
-        SALE
+      <span class="border rounded-[25.61px] text-[#FF0000] font-[Franklin-Gothic-ATF] font-medium text-[15.37px] leading-[17.93px] tracking-[0%] text-center" style="border-color: #FF0000;">
+        On Sale!
       </span>
     </div>
   {% endif %}
@@ -31,23 +32,9 @@
     {% endif %}
 
   </div>
-
+  </div>
   <!-- CONTENT -->
   <div class="p-3">
-
-    <!-- BRAND -->
-    <p class="text-xs text-gray-500 uppercase">{{ product.vendor }}</p>
-
-    <!-- TITLE -->
-    <h3 class="text-sm font-medium mt-1 line-clamp-2">{{ product.title }}</h3>
-
-    <!-- PRICE -->
-    <div class="mt-1 flex gap-2 items-center">
-      <span class="product-price font-semibold">{{ product.price | money }}</span>
-      {% if product.compare_at_price_max > product.price %}
-        <span class="line-through text-gray-400 text-sm">{{ product.compare_at_price_max | money }}</span>
-      {% endif %}
-    </div>
 
     <!-- COLOR SWATCHES -->
     {% for option in product.options_with_values %}
@@ -77,8 +64,7 @@
               {% endif %}
 
               <button
-                class="swatch w-5 h-5 rounded-full border transition-all duration-200 hover:scale-110 focus:outline-none"
-                style="background-color: {{ variant.option1 | downcase }}"
+                class="swatch w-5 h-5 rounded-full border transition-all duration-200 hover:scale-110 focus:outline-none border border-[length:1px] rounded-full" style="border-color: #0A4874; background-color: {{ variant.option1 | downcase }}"
                 data-image="{{ primary_image }}"
                 data-secondary="{{ secondary_image }}"
                 data-price="{{ variant.price | money }}"
@@ -90,6 +76,20 @@
         </div>
       {% endif %}
     {% endfor %}
+
+        <!-- BRAND -->
+    <p class="text-[#111111] uppercase font-[Roboto] font-normal text-[14px] leading-[16px] tracking-[0%] text-center">{{ product.vendor }}</p>
+
+    <!-- TITLE -->
+    <h3 class="font-[Roboto] font-medium text-[16px] leading-[18px] tracking-[0%] text-[#0A4874]">{{ product.title }}</h3>
+
+    <!-- PRICE -->
+    <div class="mt-1 flex gap-2 items-center">
+      <span class="product-price font-semibold">{{ product.price | money }}</span>
+      {% if product.compare_at_price_max > product.price %}
+        <span class="line-through text-gray-400 text-sm">{{ product.compare_at_price_max | money }}</span>
+      {% endif %}
+    </div>
 
   </div>
 
