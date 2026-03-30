@@ -18,37 +18,18 @@ document.addEventListener("DOMContentLoaded", () => {
         swatch.classList.add("ring-2", "ring-black");
 
         // PRIMARY IMAGE
-        if (newPrimary) {
-          primaryImage.classList.add("opacity-0");
-
-          setTimeout(() => {
-            primaryImage.src = newPrimary;
-            primaryImage.classList.remove("opacity-0");
-          }, 200);
+        if (newPrimary && primaryImage) {
+          primaryImage.src = newPrimary;
         }
 
-        // SECONDARY IMAGE (key fix)
-        if (secondaryImage) {
-          secondaryImage.classList.add("opacity-0");
-
-          setTimeout(() => {
-            if (newSecondary) {
-              secondaryImage.src = newSecondary;
-            } else {
-              secondaryImage.src = newPrimary; // fallback
-            }
-            secondaryImage.classList.remove("opacity-0");
-          }, 200);
+        // SECONDARY IMAGE
+        if (newSecondary && secondaryImage) {
+          secondaryImage.src = newSecondary;
         }
 
         // PRICE
-        if (newPrice) {
-          price.classList.add("opacity-0");
-
-          setTimeout(() => {
-            price.textContent = newPrice;
-            price.classList.remove("opacity-0");
-          }, 200);
+        if (newPrice && price) {
+          price.textContent = newPrice;
         }
       });
     });

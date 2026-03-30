@@ -1,12 +1,11 @@
 <div class="group relative w-full">
 
-  <!-- CARD -->
   <div class="relative bg-white rounded-2xl overflow-hidden">
 
     <!-- SALE BADGE -->
     {% if product.compare_at_price_max > product.price %}
       <div class="absolute top-3 left-3 z-10">
-        <span class="bg-black text-white text-[11px] font-medium px-2.5 py-1 rounded-full tracking-wide">
+        <span class="bg-black text-white text-[11px] px-2 py-1 rounded-full">
           SALE
         </span>
       </div>
@@ -15,86 +14,60 @@
     <!-- IMAGE WRAPPER -->
     <div class="relative w-full aspect-[4/5] overflow-hidden bg-gray-100">
 
-      <!-- PRIMARY IMAGE -->
+      <!-- PRIMARY -->
       <img 
         src="{{ product.featured_image | image_url: width: 800 }}"
-        alt="{{ product.title }}"
-        loading="lazy"
-        class="primary-image w-full h-full object-cover transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:scale-[1.03]"
+        class="primary-image w-full h-full object-cover transition duration-500 ease-in-out group-hover:opacity-0"
       />
 
-      <!-- SECONDARY IMAGE (hidden by default) -->
-      <img 
-        src="{% if product.images.size > 1 %}{{ product.images[1] | image_url: width: 800 }}{% endif %}"
-        alt="{{ product.title }}"
-        loading="lazy"
-        class="secondary-image absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:opacity-100 group-hover:scale-[1.03]"
-      />
+      <!-- SECONDARY -->
+      {% if product.images.size > 1 %}
+        <img 
+          src="{{ product.images[1] | image_url: width: 800 }}"
+          class="secondary-image absolute inset-0 w-full h-full object-cover opacity-0 transition duration-500 ease-in-out group-hover:opacity-100"
+        />
+      {% endif %}
 
     </div>
 
     <!-- CONTENT -->
-    <div class="px-3 pt-3 pb-4">
+    <div class="p-3">
 
-      <!-- BRAND -->
-      <p class="text-[12px] text-gray-500 leading-none tracking-wide uppercase">
+      <p class="text-xs text-gray-500 uppercase">
         {{ product.vendor }}
       </p>
 
-      <!-- TITLE -->
-      <h3 class="mt-1 text-[14px] font-medium text-gray-900 leading-snug line-clamp-2">
+      <h3 class="text-sm font-medium mt-1">
         {{ product.title }}
       </h3>
 
-      <!-- PRICE -->
-      <div class="mt-2 flex items-center gap-2">
-
-        <span class="product-price text-[14px] font-semibold text-gray-900">
+      <div class="mt-1 flex gap-2 items-center">
+        <span class="product-price font-semibold">
           {{ product.price | money }}
         </span>
 
         {% if product.compare_at_price_max > product.price %}
-          <span class="text-[13px] text-gray-400 line-through">
+          <span class="line-through text-gray-400 text-sm">
             {{ product.compare_at_price_max | money }}
           </span>
         {% endif %}
-
       </div>
 
       <!-- SWATCHES -->
       {% for option in product.options_with_values %}
         {% if option.name == 'Color' %}
-          <div class="flex items-center gap-2 mt-3">
+          <div class="flex gap-2 mt-3">
 
-            {% for value in option.values %}
-              {% assign variant = product.variants | where: "option1", value | first %}
-
-              {% if variant %}
-                {% assign primary_img = variant.featured_image %}
-                {% assign secondary_img = nil %}
-
-                {%- comment -%}
-                  Try to find a second image for this variant:
-                  Assumption: variant images are grouped or next image is secondary
-                {%- endcomment -%}
-
-                {% for image in product.images %}
-                  {% if image.src == primary_img.src %}
-                    {% assign index = forloop.index0 | plus: 1 %}
-                    {% assign secondary_img = product.images[index] %}
-                  {% endif %}
-                {% endfor %}
-
+            {% for variant in product.variants %}
+              {% if variant.option1 %}
                 <button
-                  class="swatch w-5 h-5 rounded-full border border-gray-300 transition-all duration-200 hover:scale-110 focus:outline-none"
-                  style="background-color: {{ value | downcase }}"
-                  data-image="{{ primary_img | image_url: width: 800 }}"
-                  data-secondary="{% if secondary_img %}{{ secondary_img | image_url: width: 800 }}{% endif %}"
+                  class="swatch w-5 h-5 rounded-full border"
+                  style="background-color: {{ variant.option1 | downcase }}"
+                  data-image="{{ variant.featured_image | image_url: width: 800 }}"
+                  data-secondary="{% if product.images.size > 1 %}{{ product.images[1] | image_url: width: 800 }}{% endif %}"
                   data-price="{{ variant.price | money }}"
-                  aria-label="{{ value }}"
                 ></button>
               {% endif %}
-
             {% endfor %}
 
           </div>
