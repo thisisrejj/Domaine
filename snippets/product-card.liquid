@@ -1,62 +1,86 @@
-<div class="group relative border rounded-lg p-4">
+<div class="group relative border rounded-xl p-4 overflow-hidden">
 
   <!-- SALE BADGE -->
   {% if product.compare_at_price_max > product.price %}
-    <span class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1">
+    <span class="absolute top-3 left-3 z-10 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
       Sale
     </span>
   {% endif %}
 
-  <!-- PRODUCT IMAGE -->
-  <div class="relative overflow-hidden">
+  <!-- IMAGE WRAPPER -->
+  <div class="relative w-full aspect-[3/4] overflow-hidden">
+
+    <!-- PRIMARY IMAGE -->
     <img 
-      src="{{ product.featured_image | image_url: width: 500 }}" 
+      src="{{ product.featured_image | image_url: width: 600 }}"
       alt="{{ product.title }}"
-      class="w-full transition-opacity duration-300 group-hover:opacity-0 primary-image"
+      class="primary-image w-full h-full object-cover transition-opacity duration-300 ease-in-out"
     />
 
+    <!-- SECONDARY IMAGE (hover) -->
     {% if product.images.size > 1 %}
       <img 
-        src="{{ product.images[1] | image_url: width: 500 }}"
-        class="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 secondary-image"
+        src="{{ product.images[1] | image_url: width: 600 }}"
+        alt="{{ product.title }}"
+        class="secondary-image absolute top-0 left-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 ease-in-out"
       />
     {% endif %}
+
   </div>
 
   <!-- PRODUCT INFO -->
-  <div class="mt-4">
-    <p class="text-sm text-gray-500">{{ product.vendor }}</p>
-    <h3 class="text-lg font-semibold">{{ product.title }}</h3>
+  <div class="mt-4 space-y-1">
 
+    <!-- BRAND -->
+    <p class="text-sm text-gray-500">
+      {{ product.vendor }}
+    </p>
+
+    <!-- TITLE -->
+    <h3 class="text-base font-semibold leading-tight">
+      {{ product.title }}
+    </h3>
+
+    <!-- PRICE -->
     <div class="flex items-center gap-2 mt-1">
-      <span class="text-black font-bold product-price">
+
+      <span class="product-price text-black font-semibold">
         {{ product.price | money }}
       </span>
 
       {% if product.compare_at_price_max > product.price %}
-        <span class="text-gray-400 line-through">
+        <span class="text-gray-400 line-through text-sm">
           {{ product.compare_at_price_max | money }}
         </span>
       {% endif %}
+
     </div>
+
   </div>
 
   <!-- VARIANT SWATCHES -->
-  <div class="flex gap-2 mt-3">
-    {% for option in product.options_with_values %}
-      {% if option.name == 'Color' %}
+  {% for option in product.options_with_values %}
+    {% if option.name == 'Color' %}
+      <div class="flex items-center gap-2 mt-3">
+
         {% for value in option.values %}
           {% assign variant = product.variants | where: "option1", value | first %}
 
-          <button 
-            class="w-6 h-6 rounded-full border swatch"
-            style="background-color: {{ value | downcase }}"
-            data-image="{{ variant.featured_image | image_url: width: 500 }}"
-            data-price="{{ variant.price | money }}"
-          ></button>
+          {% if variant %}
+            <button
+              class="swatch w-6 h-6 rounded-full border border-gray-300 hover:scale-110 transition-transform"
+              style="background-color: {{ value | downcase }}"
+              data-image="{{ variant.featured_image | image_url: width: 600 }}"
+              data-secondary="{% if variant.image %}{{ variant.image | image_url: width: 600 }}{% else %}{{ product.images[1] | image_url: width: 600 }}{% endif %}"
+              data-price="{{ variant.price | money }}"
+              aria-label="{{ value }}"
+            ></button>
+          {% endif %}
+
         {% endfor %}
-      {% endif %}
-    {% endfor %}
-  </div>
+
+      </div>
+    {% endif %}
+  {% endfor %}
 
 </div>
